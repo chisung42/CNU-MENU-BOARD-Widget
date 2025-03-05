@@ -1,5 +1,5 @@
 // 1. GitHub의 raw 링크를 사용하여 외부 코드 불러오기
-const rawUrl = "https://raw.githubusercontent.com/username/repository/branch/yourScript.js"; // 실제 URL로 변경
+const rawUrl = "https://raw.githubusercontent.com/chisung42/CNU-MENU-BOARD-Widget/refs/heads/main/mainScript.js";
 const req = new Request(rawUrl);
 const codeString = await req.loadString();
 console.log("불러온 코드 길이:", codeString.length);
