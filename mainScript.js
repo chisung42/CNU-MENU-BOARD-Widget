@@ -1,6 +1,3 @@
- // Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: deep-blue; icon-glyph: book;
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: brown; icon-glyph: magic;
@@ -24,7 +21,7 @@ function getDate() {
     const formattedDate = `${year}.${formattedMonth}.${formattedDay}`;
     
     if (DAY >= 6) {
-    return addDaysToDate(8 - DAY);
+        return addDaysToDate(8 - DAY);
     }
     return formattedDate;
 }
@@ -53,11 +50,11 @@ function getBLD(eatBreakfast) {
     let result = 0;
 
     if (hour < 9 && eatBreakfast == 1) {
-    result = 2;
+        result = 2;
     } else if ((hour >= 9 || eatBreakfast == 0) && (hour < 14)) {
-    result = 4;
+        result = 4;
     } else {
-    result = 2;
+        result = 2;
     }
     return result;
 }
@@ -70,19 +67,19 @@ function getTitleDate() {
     return result;
 }
 
-
-let htmlContent2 = await (new Request("http://crawlingcnumeal.kro.kr")).loadString();
- 
-
-let crawlingscript;
-
-// 정규식을 사용하여 태그 내부의 코드를 추출
-let codeMatch2 = htmlContent2.match(/<pre[^>]*>([\s\S]*?)<\/pre>/);
-if (codeMatch2 && codeMatch2.length > 1) {
-    crawlingscript = codeMatch2[1].trim(); // 내부 코드만 사용 (앞뒤 공백 제거)
-} else {
-    console.error("코드를 추출하지 못했습니다.");
+let crawlingscript = `let data = [];
+for (let row = 2; row <= 5; row++) {
+    for (let col = 1; col <= 6; col++) {
+        const menuSelector = "body > div > form > div.menu-wr > div.is-wauto-box.menu-tbl-wr > table > tbody > tr:nth-child(" + row + ") > td:nth-child(" + col + ") > ul > li > p";
+        const priceSelector = "body > div > form > div.menu-wr > div.is-wauto-box.menu-tbl-wr > table > tbody > tr:nth-child(" + row + ") > td:nth-child(" + col + ") > ul > li > h3";
+        const menuElement = document.querySelector(menuSelector);
+        const priceElement = document.querySelector(priceSelector);
+        if (menuElement && priceElement) {
+            data.push([row, col, menuElement.innerText, priceElement.innerText]);
+        }
+    }
 }
+data;`
 
 const req = new Request(`https://mobileadmin.cnu.ac.kr/food/index.jsp?searchYmd=${getDate()}&searchLang=OCL04.10&searchView=cafeteria&searchCafeteria=OCL03.02&Language_gb=OCL04.10`);
 const wv = new WebView();
@@ -100,12 +97,12 @@ function getCoord(cafeteria, BLD) {
     let n1 = -1;
     let n2 = -1;
     if (cafeteria == 2) {
-    n1 = BLD;
-    n2 = cafeteria;
+        n1 = BLD;
+        n2 = cafeteria;
     } else if (cafeteria == 3) {
-    const hour = new Date().getHours(); // Added hour definition
-    n1 = hour < 14 ? 3 : 5;
-    n2 = cafeteria;
+        const hour = new Date().getHours(); // hour 변수 정의
+        n1 = hour < 14 ? 3 : 5;
+        n2 = cafeteria;
     }
     return `${n1},${n2}`;
 }
@@ -124,7 +121,3 @@ titleTxt.font = Font.systemFont(16);
 menuTxt.font = Font.systemFont(12);
 Script.setWidget(widget);
 Script.complete();
-
-console.log(getDate());
-console.log(data_json);
-console.log(menu);
